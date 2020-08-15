@@ -1,4 +1,4 @@
-import httpClient from '@/plugins/http-client';
+import { pokeApi, routes } from '@/api/pokeApi';
 
 interface Pokemon {
   name: string;
@@ -19,18 +19,18 @@ interface ReturnError {
 
 type Return = Promise<ReturnSuccess | ReturnError>
 
-const URL = 'https://pokeapi.co/api/v2/pokemon';
+const amountOfClassicPokemons = 151;
 
 async function searchAllClassicPokemons(): Return {
   try {
-    const { data } = await httpClient.get<ServerResponse>(URL, {
+    const { data } = await pokeApi.get<ServerResponse>(routes.ALL_POKEMONS(), {
       params: {
-        limit: 151,
+        limit: amountOfClassicPokemons,
       },
     });
     return { pokemons: data.results };
   } catch (e) {
-    return ({ error: 'server down' });
+    return ({ error: 'server\'s down' });
   }
 }
 
