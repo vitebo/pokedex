@@ -6,6 +6,7 @@ const pokeApi = httpClient.create({
 
 const routes = {
   ALL_POKEMONS: () => '/pokemon',
+  POKEMON: (id: string) => '/pokemon/:id/'.replace(':id', id),
 };
 
 export { pokeApi, routes };

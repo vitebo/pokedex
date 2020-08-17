@@ -10,7 +10,7 @@ interface HttpClientRequestConfig {
 }
 
 interface HttpClientInstance {
-  get<T = unknown>(url: string, config: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
+  get<T = unknown>(url: string, config?: HttpClientRequestConfig): Promise<HttpClientResponse<T>>;
 }
 
 interface HttpClientStatic extends HttpClientInstance {
