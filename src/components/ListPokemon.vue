@@ -56,28 +56,29 @@ export default class ListPokemon extends Vue {
     this.setupPokemons();
   }
 
-  async setupPokemons(): Promise<void> {
-    const data = await searchAllClassicPokemons();
-    if ('error' in data) {
-      this.error = data.error;
-    } else {
-      this.pokemons = data.pokemons;
-      const [pokemon] = this.pokemons;
-      this.selectPokemon(String(pokemon.name));
-    }
+  setupPokemons(): void {
+    searchAllClassicPokemons()
+      .then(({ pokemons }) => {
+        this.pokemons = pokemons;
+        const [pokemon] = this.pokemons;
+        this.selectPokemon(pokemon.name);
+      })
+      .catch((error: Error) => {
+        this.error = error.message;
+      });
   }
 
-  async selectPokemon(name: string) {
-    const data = await searchPokemon({ id: name });
-    if ('error' in data) {
-      this.error = data.error;
-    } else {
-      const pokemon = {
-        ...data.pokemon,
-        name,
-      };
-      this.selectedPokemon = pokemon;
-    }
+  selectPokemon(name: string): void {
+    searchPokemon({ id: name })
+      .then(({ pokemon }) => {
+        this.selectedPokemon = {
+          ...pokemon,
+          name,
+        };
+      })
+      .catch((error: Error) => {
+        this.error = error.message;
+      });
   }
 
   isTheSelectedPokemon(pokemon: PokemonListItem) {

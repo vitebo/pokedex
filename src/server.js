@@ -1,4 +1,4 @@
-import { Server, Model } from 'miragejs';
+import { Server, Model, Response } from 'miragejs';
 
 function makeServer({ environment = 'development' } = {}) {
   return new Server({
@@ -21,7 +21,8 @@ function makeServer({ environment = 'development' } = {}) {
 
     routes() {
       this.urlPrefix = 'https://pokeapi.co/api/v2';
-      this.get('/pokemon', (schema) => ({ results: schema.db.pokemons }));
+      // this.get('/pokemon', (schema) => ({ results: schema.db.pokemons }));
+      this.get('/pokemon', () => new Response(500));
     },
   });
 }

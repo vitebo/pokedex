@@ -1,4 +1,4 @@
-import { pokeApi, routes } from '@/api/pokeApi';
+import { pokeApi, routes } from '@/api/poke-api';
 
 interface DTO {
   id: string;
@@ -19,31 +19,22 @@ interface ServerResponse {
   };
 }
 
-interface ReturnSuccess {
+interface Return {
   pokemon: {
     id: string;
     image: string | null;
   };
 }
 
-interface ReturnError {
-  error: string;
-}
-
-type Return = Promise<ReturnSuccess | ReturnError>
-
-async function searchPokemon({ id }: DTO): Return {
-  try {
-    const { data } = await pokeApi.get<ServerResponse>(routes.POKEMON(id));
-    return {
+async function searchPokemon({ id }: DTO): Promise<Return> {
+  return pokeApi.get<ServerResponse>(routes.POKEMON(id))
+    .then(({ data }) => ({
       pokemon: {
         id,
         image: data.sprites.other['official-artwork'].front_default,
       },
-    };
-  } catch (e) {
-    return ({ error: 'server\'s down' });
-  }
+    }))
+    .catch(() => Promise.reject(new Error('server\'s down')));
 }
 
 export default searchPokemon;

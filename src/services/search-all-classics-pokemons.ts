@@ -1,4 +1,4 @@
-import { pokeApi, routes } from '@/api/pokeApi';
+import { pokeApi, routes } from '@/api/poke-api';
 
 interface Pokemon {
   name: string;
@@ -9,29 +9,19 @@ interface ServerResponse {
   results: Pokemon[];
 }
 
-interface ReturnSuccess {
+interface Response {
   pokemons: Pokemon[];
 }
 
-interface ReturnError {
-  error: string;
-}
-
-type Return = Promise<ReturnSuccess | ReturnError>
-
 const amountOfClassicPokemons = 151;
 
-async function searchAllClassicPokemons(): Return {
-  try {
-    const { data } = await pokeApi.get<ServerResponse>(routes.ALL_POKEMONS(), {
-      params: {
-        limit: amountOfClassicPokemons,
-      },
-    });
-    return { pokemons: data.results };
-  } catch (e) {
-    return ({ error: 'server\'s down' });
-  }
+function searchAllClassicPokemons(): Promise<Response> {
+  const params = {
+    limit: amountOfClassicPokemons,
+  };
+  return pokeApi.get<ServerResponse>(routes.ALL_POKEMONS(), { params })
+    .then(({ data }) => ({ pokemons: data.results }))
+    .catch(() => Promise.reject(new Error('server\'s down')));
 }
 
 export default searchAllClassicPokemons;
