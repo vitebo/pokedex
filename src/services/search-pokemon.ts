@@ -5,7 +5,6 @@ interface DTO {
 }
 
 interface ServerResponse {
-  id: string;
   sprites: {
     other: {
       dream_world: {
